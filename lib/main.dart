@@ -32,16 +32,15 @@ class MyAppState extends State<MyApp> {
             builder: (_, AsyncSnapshot<List<Recipe>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  print(snapshot.data); // is printing
-                  // return ListView(
-                  //   children: [...List.generate(snapshot.data!.length, (index) {
-                  //     print('nigga');
-                  //     return Text('whatsup');
-                  //   })],
-                  // );
-
+                  
                   return Scrollbar(
+                    thickness: 20,
+                    thumbVisibility: true,
+                    showTrackOnHover: true,
+                    interactive: true,
                     child: ListView.builder(
+                      //cacheExtent: 400,
+                      padding: EdgeInsets.all(8),
                       itemCount: snapshot.data!.length,
                       itemBuilder:(_,index){
                         return Mealcard(snapshot.data![index]);
