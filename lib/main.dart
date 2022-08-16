@@ -40,7 +40,10 @@ class MyAppState extends State<MyApp> {
                   //   })],
                   // );
 
-                  return Mealcard();
+                  return ListView(
+                    children: List.generate(snapshot.data!.length,
+                        (index) => Mealcard(snapshot.data![index])),
+                  );
                 } else
                   return AlertDialog(
                     title: Text('ERROR'),
