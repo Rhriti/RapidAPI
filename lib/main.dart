@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:weatherapp/model.dart/recipemodel.dart';
 
+import './model.dart/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import './widget/widget.dart';
 
 void main() {
   runApp(new MyApp());
@@ -13,55 +16,40 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  Future<List<Recipe>> _getitem() async {
+    return Recipeapi.getDate();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final x = _getDate();
-    //print(x);
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text('Snapshots'),
+        ),
         body: FutureBuilder(
-            future: _getDate(),
-            builder: (_, AsyncSnapshot<List<String>> snapshot) {
+            future: _getitem(),
+            builder: (_, AsyncSnapshot<List<Recipe>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  return ListView(
-                    children: List.generate(
-                        snapshot.data!.length,
-                        (index) => ListTile(
-                              title: Text(snapshot.data![index]),
-                            )),
-                  );
+                  print(snapshot.data); // is printing
+                  // return ListView(
+                  //   children: [...List.generate(snapshot.data!.length, (index) {
+                  //     print('nigga');
+                  //     return Text('whatsup');
+                  //   })],
+                  // );
+
+                  return Mealcard();
                 } else
                   return AlertDialog(
                     title: Text('ERROR'),
                     content: Text(snapshot.error.toString()),
                   );
               } else
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
             }),
       ),
     );
-  }
-
-  Future<List<String>> _getDate() async {
-    final url = Uri.parse('https://yummly2.p.rapidapi.com/feeds/list');
-    var data = await http.get(url, headers: {
-      'X-RapidAPI-Key': '38563f21b7mshfc4879230ff5f21p1a2c79jsn301e7618bd25',
-      'X-RapidAPI-Host': 'yummly2.p.rapidapi.com'
-    });
-
-    final jsonData = json.decode(data.body); //Map<String,dynamic>
-
-    List<String> names = [];
-
-    for (Map ele in jsonData['feed']) {
-      //print(ele);
-      if (ele == null ||
-          ele['display'] == null ||
-          ele['display']['displayName'] == null) continue;
-      names.add(ele['display']['displayName']);
-    }
-    //print(names);
-    return names;
   }
 }
