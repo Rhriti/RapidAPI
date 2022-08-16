@@ -40,9 +40,13 @@ class MyAppState extends State<MyApp> {
                   //   })],
                   // );
 
-                  return ListView(
-                    children: List.generate(snapshot.data!.length,
-                        (index) => Mealcard(snapshot.data![index])),
+                  return Scrollbar(
+                    child: ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder:(_,index){
+                        return Mealcard(snapshot.data![index]);
+                      } 
+                    ),
                   );
                 } else
                   return AlertDialog(
