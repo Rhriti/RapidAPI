@@ -5,7 +5,13 @@ import 'package:provider/provider.dart';
 import 'recipemodel.dart';
 
 class Recipeapi {
-  static Future<List<Recipe>> getDate() async {
+  List<Recipe> names = [];
+
+  static addnew(){
+
+  }
+
+  Future<List<Recipe>> getDate() async {
     final url = Uri.parse('https://yummly2.p.rapidapi.com/feeds/list');
     var data = await http.get(url, headers: {
       'X-RapidAPI-Key': '38563f21b7mshfc4879230ff5f21p1a2c79jsn301e7618bd25',
@@ -14,7 +20,7 @@ class Recipeapi {
 
     final jsonData = json.decode(data.body); //Map<String,dynamic>
 
-    List<Recipe> names = [];
+    
     String display;
     String rating;
     String time;
