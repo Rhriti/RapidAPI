@@ -4,29 +4,30 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'recipemodel.dart';
 
-class Recipeapi {
+class Recipeapi with ChangeNotifier {
   List<Recipe> names = [];
 
-  static addnew(){
-
+  void addnew(a, b, c, d) {
+    names.add(Recipe(a, b, c, d));
+    notifyListeners();
   }
 
   Future<List<Recipe>> getDate() async {
+    print('future called ');
+
     final url = Uri.parse('https://yummly2.p.rapidapi.com/feeds/list');
     var data = await http.get(url, headers: {
       'X-RapidAPI-Key': '38563f21b7mshfc4879230ff5f21p1a2c79jsn301e7618bd25',
       'X-RapidAPI-Host': 'yummly2.p.rapidapi.com'
     });
-
-    final jsonData = json.decode(data.body); //Map<String,dynamic>
-
-    
+    final Map jsonData = json.decode(data.body); //Map<String,dynamic>
+  
     String display;
     String rating;
     String time;
     String image;
 
-    for (Map ele in jsonData['feed']) {
+    if(jsonData.containsKey('feed')){for (Map ele in jsonData['feed']) {
       print('chalu biisii');
       try {
         display = ele['display']['displayName'].toString();
@@ -55,8 +56,9 @@ class Recipeapi {
       if (display != '' && rating != '' && time != '' && image != '') {
         names.add(Recipe(display, rating, time, image));
       }
-    }
+    }}
 
-    return names;
+
+    return [...names];
   }
 }

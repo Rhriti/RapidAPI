@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../model.dart/api.dart';
 
 class Additem extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class _AdditemState extends State<Additem> {
 
   TextEditingController imageurl = TextEditingController(text: '');
   late FocusNode imageF;
+  var a, b, c;
 
   @override
   void initState() {
@@ -29,27 +32,33 @@ class _AdditemState extends State<Additem> {
     super.dispose();
   }
 
-  void save() {
+  void save(BuildContext ctx) {
     bool flag = _keys.currentState!.validate();
     if (flag == false) {
       print('flase;');
       return;
     }
-    ;
 
     _keys.currentState!.save();
+    final provider = Provider.of<Recipeapi>(ctx,listen:false);
+    provider.addnew(a, b, c, imageurl.text);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    //final provider = Provider.of<Recipeapi>(context);
     return AlertDialog(
-      scrollable: true,
+        scrollable: true,
         //title: Text('damend'),
         content: Form(
             key: _keys,
             child: Column(
               children: [
                 TextFormField(
+                    onSaved: (val) {
+                      a = val;
+                    },
                     validator: (val) {
                       if (val!.isEmpty) return 'Enter Meal name';
                       return null;
@@ -64,6 +73,9 @@ class _AdditemState extends State<Additem> {
                       ),
                     )),
                 TextFormField(
+                    onSaved: (val) {
+                      b = val;
+                    },
                     keyboardType: TextInputType.number,
                     validator: (val) {
                       if (val!.isEmpty) return 'Enter number';
@@ -79,6 +91,9 @@ class _AdditemState extends State<Additem> {
                       ),
                     )),
                 TextFormField(
+                    onSaved: (val) {
+                      c = val;
+                    },
                     keyboardType: TextInputType.number,
                     validator: (val) {
                       if (val!.isEmpty) return "Enter Time";
@@ -100,7 +115,7 @@ class _AdditemState extends State<Additem> {
                     },
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (x) {
-                      save();
+                      save(context);
                     },
                     focusNode: imageF,
                     controller: imageurl,
